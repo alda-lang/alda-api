@@ -2,4 +2,6 @@
 
 (defn -main
   [& _args]
-  (println "Oh, hello there"))
+  (println "Fake serving...")
+  @(promise)
+  (println "should never get here"))
