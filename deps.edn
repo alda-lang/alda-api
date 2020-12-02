@@ -1,0 +1,2 @@
+{:aliases
+ {:serve {:main-opts ["-m" "io.alda.releases-api.main"]}}}
