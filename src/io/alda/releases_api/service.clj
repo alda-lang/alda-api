@@ -15,5 +15,6 @@
   (-> (http/create-server
         {::http/routes routes
          ::http/type   :jetty
+         ::http/host   "0.0.0.0"
          ::http/port   port})
       http/start))
