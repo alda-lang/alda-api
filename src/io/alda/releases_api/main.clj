@@ -1,7 +1,7 @@
-(ns io.alda.releases-api.main)
+(ns io.alda.releases-api.main
+  (:require [io.alda.releases-api.service :as service]))
 
 (defn -main
-  [& _args]
-  (println "Fake serving...")
-  @(promise)
-  (println "should never get here"))
+  [& [port*]]
+  (let [port (Integer/parseInt port*)]
+    (service/serve port)))
