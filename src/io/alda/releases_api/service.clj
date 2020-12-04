@@ -8,7 +8,7 @@
 
 (def routes
   (route/expand-routes
-    #{["/" :get `report-health]}))
+    #{["/health" :get `report-health]}))
 
 (defn serve
   [port]

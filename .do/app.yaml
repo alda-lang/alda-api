@@ -6,8 +6,5 @@ services:
     deploy_on_push: true
     repo: alda-lang/releases-api
   dockerfile_path: Dockerfile
-  # run_command: |
-  #   cd /root/releases-api
-  #   clj -M:serve 8080
   health_check:
-    http_path: /
+    http_path: /health
