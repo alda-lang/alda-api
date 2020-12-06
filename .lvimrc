@@ -1,0 +1,2 @@
+let g:conjure#client#clojure#nrepl#refresh#before = 'user/stop'
+let g:conjure#client#clojure#nrepl#refresh#after = 'user/go'

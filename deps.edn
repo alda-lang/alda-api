@@ -1,11 +1,17 @@
 {:deps
- {io.pedestal/pedestal.service {:mvn/version "0.5.8"}
+ {com.stuartsierra/component   {:mvn/version "1.0.0"}
+  io.pedestal/pedestal.service {:mvn/version "0.5.8"}
   io.pedestal/pedestal.route   {:mvn/version "0.5.8"}
   io.pedestal/pedestal.jetty   {:mvn/version "0.5.8"}
-  org.slf4j/slf4j-simple       {:mvn/version "1.7.28"}}
+  org.slf4j/slf4j-simple       {:mvn/version "1.7.28"}
+  metosin/jsonista             {:mvn/version "0.2.7"}}
 
  :paths
  ["src"]
 
  :aliases
- {:serve {:main-opts ["-m" "io.alda.releases-api.main"]}}}
+ {:dev
+  {:extra-paths ["dev"]}
+
+  :serve
+  {:main-opts ["-m" "io.alda.releases-api.main"]}}}
