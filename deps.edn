@@ -1,8 +1,9 @@
 {:deps
  {com.stuartsierra/component   {:mvn/version "1.0.0"}
-  io.pedestal/pedestal.service {:mvn/version "0.5.8"}
-  io.pedestal/pedestal.route   {:mvn/version "0.5.8"}
   io.pedestal/pedestal.jetty   {:mvn/version "0.5.8"}
+  io.pedestal/pedestal.log     {:mvn/version "0.5.8"}
+  io.pedestal/pedestal.route   {:mvn/version "0.5.8"}
+  io.pedestal/pedestal.service {:mvn/version "0.5.8"}
   org.slf4j/slf4j-simple       {:mvn/version "1.7.28"}
   metosin/jsonista             {:mvn/version "0.2.7"}}
 
@@ -11,7 +12,14 @@
 
  :aliases
  {:dev
-  {:extra-paths ["dev"]}
+  {:extra-paths ["dev" "test"]}
+
+  :test
+  {:extra-paths ["test"]
+   :extra-deps {com.cognitect/test-runner
+                {:git/url "https://github.com/cognitect-labs/test-runner.git"
+                 :sha     "b6b3193fcc42659d7e46ecd1884a228993441182"}}
+   :main-opts ["-m" "cognitect.test-runner"]}
 
   :serve
   {:main-opts ["-m" "io.alda.releases-api.main"]}}}
