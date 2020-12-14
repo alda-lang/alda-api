@@ -1,14 +1,109 @@
 (ns io.alda.releases-api.releases
-  (:require [clojure.string             :as str]
+  (:require [clj-http.client            :as http]
+            [clojure.data.xml           :as xml]
+            [clojure.string             :as str]
             [com.stuartsierra.component :as component]
             [io.pedestal.log            :as log]))
 
+(def storage-base-url
+  "https://alda-releases.nyc3.digitaloceanspaces.com")
+
+(xml/alias-uri 's3 "http://s3.amazonaws.com/doc/2006-03-01/")
+
+(defn files-by-release
+  []
+  (let [xml-nodes     (-> (http/get storage-base-url)
+                          :body
+                          xml/parse-str
+                          :content)
+        content-nodes (for [{:keys [tag content]} xml-nodes
+                            :when (= ::s3/Contents tag)]
+                        content)
+        file-keys     (mapcat #(for [{:keys [tag content]} %
+                                     :when (= ::s3/Key tag)]
+                                 ;; I'm not sure why this is a list of values
+                                 ;; instead of a single value, but there is only
+                                 ;; ever one value, so I'll just pull it out
+                                 ;; here.
+                                 (first content))
+                              content-nodes)]
+    (->> file-keys
+         (map #(str/split % #"/" 2))
+         (group-by first)
+         (reduce-kv (fn [m k v]
+                      (assoc m k (map second v)))
+                    {}))))
+
+(defn parse-version
+  "Given a string like \"1.2.3\", returns a [major minor patch] tuple like
+   [1 2 3].
+
+   Returns nil if the provided string cannot be parsed as a version."
+  [version-string]
+  (let [components (->> (str/split version-string #"\.")
+                        (mapv #(try
+                                 (Integer/parseInt %)
+                                 (catch Throwable _))))]
+    (when (and (= 3 (count components))
+               (every? number? components))
+      components)))
+
 (defn compile-releases-data
   []
-  ;; TODO: fetch actual data from digitalocean space
-  (sorted-map
-    [1 2 3] {:version "1.2.3"}
-    [2 0 0] {:version "2.0.0"}))
+  (->> (files-by-release)
+       (map (fn [[version-string files]]
+              (let [version (or (parse-version version-string)
+                                (throw (ex-info
+                                         "Invalid version string."
+                                         {:version-string version-string})))]
+                [version
+                 (merge
+                   {:version
+                    version-string
+
+                    :assets
+                    (into
+                      {}
+                      (concat
+                        (for [os-and-arch
+                              ["darwin-amd64" "linux-386" "linux-amd64"]]
+                          [os-and-arch
+                           (for [file files
+                                 :when (or (str/includes? file os-and-arch)
+                                           (str/includes? file "non-windows"))]
+                             {:type "executable"
+                              :name (last (str/split file #"/"))
+                              :url  (format "%s/%s/%s"
+                                            storage-base-url
+                                            version-string
+                                            file)})])
+                        (for [os-and-arch
+                              ["windows-386" "windows-amd64"]]
+                          [os-and-arch
+                           (for [file files
+                                 :when (or (str/includes? file os-and-arch)
+                                           (str/includes? file "/windows/"))]
+                             {:type "executable"
+                              :name (last (str/split file #"/"))
+                              :url  (format "%s/%s/%s"
+                                            storage-base-url
+                                            version-string
+                                            file)})])))}
+                   (when (some #{"date.txt"} files)
+                     {:date
+                      (-> (http/get (format "%s/%s/date.txt"
+                                            storage-base-url
+                                            version-string))
+                          :body
+                          str/trim)})
+                   (when (some #{"CHANGELOG.md"} files)
+                     {:changelog
+                      (-> (http/get (format "%s/%s/CHANGELOG.md"
+                                            storage-base-url
+                                            version-string))
+                          :body
+                          str/trim)}))])))
+       (into (sorted-map))))
 
 (defrecord Cache []
   component/Lifecycle
@@ -40,20 +135,6 @@
     (when running?
       (reset! running? false))
     (dissoc component ::data :cache/running?)))
-
-(defn parse-version
-  "Given a string like \"1.2.3\", returns a [major minor patch] tuple like
-   [1 2 3].
-
-   Returns nil if the provided string cannot be parsed as a version."
-  [version-string]
-  (let [components (->> (str/split version-string #"\.")
-                        (mapv #(try
-                                 (Integer/parseInt %)
-                                 (catch Throwable _))))]
-    (when (and (= 3 (count components))
-               (every? number? components))
-      components)))
 
 (def alda-v2-explanation
   "Alda v2 is a long-anticipated total rewrite of Alda, focused on:

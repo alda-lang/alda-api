@@ -1,9 +1,11 @@
 {:deps
- {com.stuartsierra/component   {:mvn/version "1.0.0"}
+ {clj-http/clj-http            {:mvn/version "3.10.3"}
+  com.stuartsierra/component   {:mvn/version "1.0.0"}
   io.pedestal/pedestal.jetty   {:mvn/version "0.5.8"}
   io.pedestal/pedestal.log     {:mvn/version "0.5.8"}
   io.pedestal/pedestal.route   {:mvn/version "0.5.8"}
   io.pedestal/pedestal.service {:mvn/version "0.5.8"}
+  org.clojure/data.xml         {:mvn/version "0.2.0-alpha6"}
   org.slf4j/slf4j-simple       {:mvn/version "1.7.28"}
   metosin/jsonista             {:mvn/version "0.2.7"}}
 
