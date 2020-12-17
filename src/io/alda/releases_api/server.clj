@@ -25,6 +25,10 @@
 (def client-error-response
   (partial response 400))
 
+(defn not-found-response
+  [& [message]]
+  (response 404 (or message "Not Found")))
+
 (defn report-health
   [_request]
   (success-response "I'm healthy!"))
@@ -42,10 +46,22 @@
       (success-response
         (releases/latest-releases data parsed-version)))))
 
+(defn get-release
+  [{::releases/keys [data]
+    :keys [path-params]
+    :as _request}]
+  (let [{:keys [release-version]} path-params
+        release-version           (releases/parse-version release-version)
+        release-data              (releases/get-release data release-version)]
+    (if release-data
+      (success-response release-data)
+      (not-found-response))))
+
 (def routes
   (route/expand-routes
-    #{["/health" :get `report-health]
-      ["/latest" :get `latest-releases]}))
+    #{["/health"                   :get `report-health]
+      ["/latest"                   :get `latest-releases]
+      ["/release/:release-version" :get `get-release]}))
 
 (defn data-interceptor
   [{::releases/keys [data] :as _cache}]

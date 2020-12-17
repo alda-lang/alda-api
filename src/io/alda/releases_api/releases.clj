@@ -198,3 +198,7 @@
       {:releases releases}
       (when explanation
         {:explanation explanation}))))
+
+(defn get-release
+  [data release-version]
+  (get data release-version))
