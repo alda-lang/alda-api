@@ -1,4 +1,4 @@
-FROM daveyarwood:alda-releases-api:latest
+FROM daveyarwood/alda-releases-api:latest
 
 WORKDIR /root/releases-api
 COPY . .
