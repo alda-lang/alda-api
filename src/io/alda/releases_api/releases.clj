@@ -202,3 +202,8 @@
 (defn get-release
   [data release-version]
   (get data release-version))
+
+(defn all-releases
+  [data]
+  {:releases (reverse (vals data))})
+

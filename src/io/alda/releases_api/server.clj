@@ -57,11 +57,17 @@
       (success-response release-data)
       (not-found-response))))
 
+(defn all-releases
+  [{::releases/keys [data]
+    :as _request}]
+  (success-response (releases/all-releases data)))
+
 (def routes
   (route/expand-routes
     #{["/health"                   :get `report-health]
       ["/latest"                   :get `latest-releases]
-      ["/release/:release-version" :get `get-release]}))
+      ["/release/:release-version" :get `get-release]
+      ["/releases"                 :get `all-releases]}))
 
 (defn data-interceptor
   [{::releases/keys [data] :as _cache}]
