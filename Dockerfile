@@ -1,4 +1,5 @@
-FROM clojure:openjdk-11-tools-deps-1.10.1.739
+FROM daveyarwood:alda-releases-api:latest
+
 WORKDIR /root/releases-api
 COPY . .
 
