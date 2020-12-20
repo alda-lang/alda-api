@@ -41,7 +41,7 @@ else
   start_datadog_agent="start datadog-agent"
 fi
 
-debug_datadog_failure="cat /var/log/datadog/agent.log"
+debug_datadog_failure="cat /var/log/datadog/*"
 
 $start_datadog_agent || $debug_datadog_failure
 
