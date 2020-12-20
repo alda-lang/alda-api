@@ -29,16 +29,21 @@ else
     "$datadog_config"
 fi
 
+
 # service wrapper
 if which service >/dev/null; then
-  service datadog-agent restart
+  start_datadog_agent="service datadog-agent restart"
 # systemd
 elif which systemctl >/dev/null; then
-  systemctl restart datadog-agent.service
+  start_datadog_agent="systemctl restart datadog-agent.service"
 # upstart
 else
-  start datadog-agent
+  start_datadog_agent="start datadog-agent"
 fi
+
+debug_datadog_failure="cat /var/log/datadog/agent.log"
+
+$start_datadog_agent || $debug_datadog_failure
 
 # Serve the app.
 cd "$(dirname "$0")/../"
