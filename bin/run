@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Configure Datadog agent, using the step-by-step Debian instructions here:
+#
+# https://app.datadoghq.com/signup/agent#debian
+
+if [[ -z "$DD_API_KEY" ]]; then
+  echo "ERROR - DD_API_KEY not set."
+  exit 1
+fi
+
+datadog_config="/etc/datadog-agent/datadog.yaml"
+datadog_example_config="/etc/datadog-agent/datadog.yaml.example"
+
+if [[ -f "$datadog_config" ]]; then
+  echo "*** $datadog_config already exists. Not overwriting! ***"
+else
+  echo "*** Generating $datadog_config ***"
+
+  sed \
+    "s/api_key:.*/api_key: $DD_API_KEY/" \
+    "$datadog_example_config" \
+    > "$datadog_config"
+
+  sed -i \
+    's/# site:.*/site: datadoghq.com/' \
+    "$datadog_config"
+fi
+
+systemctl restart datadog-agent.service
+
+# Serve the app.
+cd "$(dirname "$0")/../"
+clojure -M:serve 8080

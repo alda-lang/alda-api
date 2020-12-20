@@ -10,4 +10,4 @@ RUN clojure -P
 RUN clojure -M:test
 
 # Serve the app.
-CMD clojure -M:serve 8080
+CMD bin/run
