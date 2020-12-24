@@ -41,7 +41,7 @@ else
   start_datadog_agent="start datadog-agent"
 fi
 
-$start_datadog_agent || cat /var/log/datadog/*
+$start_datadog_agent || cat /var/log/datadog/* || true
 
 # Serve the app.
 cd "$(dirname "$0")/../"
