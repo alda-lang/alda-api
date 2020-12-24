@@ -1,10 +1,10 @@
-(ns io.alda.releases-api.server
-  (:require [com.stuartsierra.component    :as component]
-            [io.alda.releases-api.releases :as releases]
-            [io.pedestal.http              :as http]
-            [io.pedestal.http.route        :as route]
-            [io.pedestal.interceptor       :as int]
-            [jsonista.core                 :as json]))
+(ns io.alda.api.server
+  (:require [com.stuartsierra.component :as component]
+            [io.alda.api.releases       :as releases]
+            [io.pedestal.http           :as http]
+            [io.pedestal.http.route     :as route]
+            [io.pedestal.interceptor    :as int]
+            [jsonista.core              :as json]))
 
 (defn response
   [status payload]
@@ -65,14 +65,14 @@
 (def routes
   (route/expand-routes
     #{["/health"                   :get `report-health]
-      ["/latest"                   :get `latest-releases]
       ["/release/:release-version" :get `get-release]
+      ["/releases/latest"          :get `latest-releases]
       ["/releases"                 :get `all-releases]}))
 
-(defn data-interceptor
+(defn release-data-interceptor
   [{::releases/keys [data] :as _cache}]
   (int/interceptor
-    {:name  ::data-interceptor
+    {:name  ::release-data-interceptor
      :enter (fn [context]
               (assoc-in context [:request ::releases/data] @data))
      :leave (fn [context]
@@ -94,7 +94,7 @@
              ::http/port   8080
              ::http/join?  false}
             (http/default-interceptors)
-            (update ::http/interceptors conj (data-interceptor cache))
+            (update ::http/interceptors conj (release-data-interceptor cache))
             (merge component)
             http/create-server
             http/start))))

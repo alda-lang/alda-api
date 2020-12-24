@@ -1,6 +1,6 @@
-(ns io.alda.releases-api.releases-test
-  (:require [clojure.test                  :refer [deftest testing is are]]
-            [io.alda.releases-api.releases :as    releases]))
+(ns io.alda.api.releases-test
+  (:require [clojure.test         :refer [deftest testing is are]]
+            [io.alda.api.releases :as    releases]))
 
 (deftest parse-version-tests
   (testing "parsing version strings"

@@ -1,6 +1,6 @@
-# releases-api
+# alda-api
 
-An API that provides information about Alda releases.
+An API that, among other things, provides information about Alda releases.
 
 ## Development
 
@@ -11,9 +11,9 @@ replace 8080 with the port of your choice).
 
 ## Deployment
 
-The Alda Releases API is set up as a DigitalOcean App. The [app specification
-YAML file][do-app-spec-yaml] is `.do/app.yaml`. When a new commit is pushed to
-the `master` branch, it triggers an automatic build and deployment in the
+The Alda API is set up as a DigitalOcean App. The [app specification YAML
+file][do-app-spec-yaml] is `.do/app.yaml`. When a new commit is pushed to the
+`master` branch, it triggers an automatic build and deployment in the
 DigitalOcean App Platform.
 
 DigitalOcean App Platform does not support Clojure out of the box, but they do

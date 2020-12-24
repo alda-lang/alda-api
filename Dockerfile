@@ -1,6 +1,6 @@
-FROM daveyarwood/alda-releases-api:latest
+FROM daveyarwood/alda-api:latest
 
-WORKDIR /root/releases-api
+WORKDIR /root/alda-api
 COPY . .
 
 # Fetch dependencies and exit.

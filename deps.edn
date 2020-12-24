@@ -24,4 +24,4 @@
    :main-opts ["-m" "cognitect.test-runner"]}
 
   :serve
-  {:main-opts ["-m" "io.alda.releases-api.main"]}}}
+  {:main-opts ["-m" "io.alda.api.main"]}}}

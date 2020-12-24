@@ -1,7 +1,7 @@
-(ns io.alda.releases-api.system
-  (:require [com.stuartsierra.component    :as component]
-            [io.alda.releases-api.releases :as releases]
-            [io.alda.releases-api.server   :as server]))
+(ns io.alda.api.system
+  (:require [com.stuartsierra.component :as component]
+            [io.alda.api.releases       :as releases]
+            [io.alda.api.server         :as server]))
 
 (defn system
   [config]

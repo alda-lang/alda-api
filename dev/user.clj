@@ -1,7 +1,7 @@
 (ns user
-  (:require [com.stuartsierra.component  :as component]
-            [io.alda.releases-api.system :as system]
-            [io.pedestal.http            :as http]))
+  (:require [com.stuartsierra.component :as component]
+            [io.alda.api.system         :as system]
+            [io.pedestal.http           :as http]))
 
 (def system nil)
 

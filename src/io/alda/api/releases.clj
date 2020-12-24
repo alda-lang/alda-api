@@ -1,4 +1,4 @@
-(ns io.alda.releases-api.releases
+(ns io.alda.api.releases
   (:require [clj-http.client            :as http]
             [clojure.data.xml           :as xml]
             [clojure.string             :as str]
