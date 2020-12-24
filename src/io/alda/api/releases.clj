@@ -2,6 +2,7 @@
   (:require [clj-http.client            :as http]
             [clojure.data.xml           :as xml]
             [clojure.string             :as str]
+            [cognician.dogstatsd        :as dogstatsd]
             [com.stuartsierra.component :as component]
             [io.pedestal.log            :as log]))
 
@@ -119,7 +120,13 @@
               (log/info :cache/status :updating)
               (reset! data (compile-releases-data))
               (log/info :cache/status :updated)
+              (dogstatsd/increment!
+                "api.releases.cache.update.success"
+                1)
               (catch Throwable t
+                (dogstatsd/increment!
+                  "api.releases.cache.update.failed"
+                  1)
                 (log/error :exception t
                            :cache/status :failed)))
             (Thread/sleep 60000)))
