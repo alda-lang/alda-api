@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -eo pipefail
 
 # Configure Datadog agent, using the step-by-step Debian instructions here:
 #
@@ -41,7 +41,18 @@ else
   start_datadog_agent="start datadog-agent"
 fi
 
-$start_datadog_agent || cat /var/log/datadog/* || true
+set +e
+$start_datadog_agent
+if [[ $? -ne 0 ]]; then
+  cat <<EOF
+---
+2020-12-24 Dave: I've seen the message "Starting Datadog Agent: datadog-agent
+failed!" printed here, however metrics then start arriving in Datadog. So, I
+think it's OK to assume it's working and continue.
+---
+EOF
+fi
+set -e
 
 # Serve the app.
 cd "$(dirname "$0")/../"
