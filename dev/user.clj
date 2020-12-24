@@ -10,7 +10,9 @@
   (alter-var-root
     #'system
     (constantly (system/system
-                  {:http-server {::http/port 8080}}))))
+                  ;; Un-comment to enable sending metrics.
+                  {#_#_:datadog     {:env "dev"}
+                   :http-server {::http/port 8080}}))))
 
 (defn start
   []

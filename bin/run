@@ -2,6 +2,14 @@
 
 set -eo pipefail
 
+# Optional. Defaults to 8080.
+port="${1-8080}"
+
+# Optional.
+# When present, metrics are sent with the env (e.g. "prod") as a tag.
+# When absent, no metrics are sent.
+env="$2"
+
 # Configure Datadog agent, using the step-by-step Debian instructions here:
 #
 # https://app.datadoghq.com/signup/agent#debian
@@ -56,4 +64,4 @@ set -e
 
 # Serve the app.
 cd "$(dirname "$0")/../"
-clojure -M:serve 8080
+clojure -M:serve "$port" "$env"

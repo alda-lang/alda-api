@@ -4,8 +4,11 @@
             [io.pedestal.http           :as http]))
 
 (defn -main
-  [& [port*]]
+  [& [port* metrics-env]]
   (let [port (Integer/parseInt port*)]
     (-> (system/system
-          {:http-server {::http/port port}})
+          (merge
+            {:http-server {::http/port port}}
+            (when (seq metrics-env)
+              {:datadog {:env metrics-env}})))
         component/start)))

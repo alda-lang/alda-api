@@ -1,5 +1,6 @@
 (ns io.alda.api.server
-  (:require [com.stuartsierra.component :as component]
+  (:require [cognician.dogstatsd        :as dogstatsd]
+            [com.stuartsierra.component :as component]
             [io.alda.api.releases       :as releases]
             [io.pedestal.http           :as http]
             [io.pedestal.http.route     :as route]
@@ -69,6 +70,20 @@
       ["/releases/latest"          :get `latest-releases]
       ["/releases"                 :get `all-releases]}))
 
+(def request-metrics-interceptor
+  (int/interceptor
+    {:name  ::request-metrics-interceptor
+     :leave (fn [{:keys [route response] :as context}]
+              (let [{:keys [path]}   route
+                    {:keys [status]} response]
+                (dogstatsd/increment!
+                  "api.request.count"
+                  1
+                  {:tags {"endpoint" (or path "invalid")
+                          "status"   status
+                          "statusxx" (str (first (pr-str status)) "xx")}}))
+              context)}))
+
 (defn release-data-interceptor
   [{::releases/keys [data] :as _cache}]
   (int/interceptor
@@ -94,7 +109,11 @@
              ::http/port   8080
              ::http/join?  false}
             (http/default-interceptors)
-            (update ::http/interceptors conj (release-data-interceptor cache))
+            (update
+              ::http/interceptors
+              conj
+              (release-data-interceptor cache)
+              request-metrics-interceptor)
             (merge component)
             http/create-server
             http/start))))
