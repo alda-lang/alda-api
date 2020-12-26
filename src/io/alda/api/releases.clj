@@ -83,7 +83,7 @@
                           [os-and-arch
                            (for [file files
                                  :when (or (str/includes? file os-and-arch)
-                                           (str/includes? file "/windows/"))]
+                                           (str/includes? file "windows/"))]
                              {:type "executable"
                               :name (last (str/split file #"/"))
                               :url  (format "%s/%s/%s"
