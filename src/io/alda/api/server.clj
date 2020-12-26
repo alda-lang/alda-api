@@ -73,13 +73,15 @@
 (def request-metrics-interceptor
   (int/interceptor
     {:name  ::request-metrics-interceptor
-     :leave (fn [{:keys [route response] :as context}]
-              (let [{:keys [path]}   route
-                    {:keys [status]} response]
+     :leave (fn [{:keys [route request response] :as context}]
+              (let [{:keys [path]}           route
+                    {:keys [request-method]} request
+                    {:keys [status]}         response]
                 (dogstatsd/increment!
                   "api.request.count"
                   1
                   {:tags {"endpoint" (or path "invalid")
+                          "method"   request-method
                           "status"   status
                           "statusxx" (str (first (pr-str status)) "xx")}}))
               context)}))
