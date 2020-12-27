@@ -83,7 +83,8 @@
                   {:tags {"endpoint" (or path "invalid")
                           "method"   (name request-method)
                           "status"   status
-                          "statusxx" (str (first (pr-str status)) "xx")}}))
+                          "statusxx" (when status
+                                       (str (first (pr-str status)) "xx"))}}))
               context)}))
 
 (defn release-data-interceptor
