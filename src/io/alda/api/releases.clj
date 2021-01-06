@@ -118,9 +118,9 @@
           ;; Update the cache every 60 seconds.
           (while @running?
             (try
-              (log/info :cache/status :updating)
+              (log/debug :cache/status :updating)
               (reset! data (compile-releases-data))
-              (log/info :cache/status :updated)
+              (log/debug :cache/status :updated)
               (dogstatsd/increment!
                 "api.releases.cache.update.success"
                 1)
