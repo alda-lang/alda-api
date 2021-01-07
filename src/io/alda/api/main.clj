@@ -6,6 +6,7 @@
 (defn -main
   [& [port* metrics-env]]
   (let [port (Integer/parseInt port*)]
+    (println "Serving app on port" port)
     (-> (system/system
           (merge
             {:http-server {::http/port port}}
