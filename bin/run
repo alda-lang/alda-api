@@ -67,3 +67,5 @@ cd "$(dirname "$0")/../"
 echo "Current directory: $PWD"
 echo "Serving app (port: $port, env: $env)"
 clojure -M:serve "$port" "$env"
+
+echo "Done serving. Exiting."
