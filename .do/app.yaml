@@ -8,7 +8,7 @@ services:
   dockerfile_path: Dockerfile
   health_check:
     http_path: /health
-    initial_delay_seconds: 10
+    initial_delay_seconds: 300
     period_seconds: 5
     timeout_seconds: 5
     success_threshold: 3
