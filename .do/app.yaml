@@ -1,10 +1,10 @@
-name: releases-api
+name: alda-api
 services:
-- name: releases-api
+- name: alda-api
   github:
     branch: master
     deploy_on_push: true
-    repo: alda-lang/releases-api
+    repo: alda-lang/alda-api
   dockerfile_path: Dockerfile
   health_check:
     http_path: /health
