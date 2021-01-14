@@ -1,0 +1,64 @@
+#!/usr/bin/env ruby
+
+require 'date'
+require 'json'
+require 'yaml'
+require 'diffy'
+
+unless system("which doctl >/dev/null")
+  puts "This script requires `doctl`."
+  exit 1
+end
+
+app_id = "270c97ef-413c-4220-8dcb-d34fb2ad16c2"
+
+app_yaml_before = `doctl apps spec get #{app_id}`
+
+if app_yaml_before.empty?
+  puts "Failed to fetch app spec."
+  exit 1
+end
+
+app_config = YAML.load(app_yaml_before)
+
+unless app_config.is_a? Hash
+  puts "Failed to parse app spec."
+  exit 1
+end
+
+app_config["services"][0]["health_check"] = {
+  "http_path"             => "/health",
+  "initial_delay_seconds" => 300,
+  "period_seconds"        => 5,
+  "timeout_seconds"       => 5,
+  "success_threshold"     => 3,
+  "failure_threshold"     => 9
+}
+
+app_yaml_after = app_config.to_yaml
+
+diff = Diffy::Diff.new(app_yaml_before, app_yaml_after).to_s(:color).chomp
+
+if diff.empty?
+  puts "App spec is up to date. No changes to make."
+  exit 0
+end
+
+puts diff
+puts
+puts "Perform update? [yN]"
+reply = gets.chomp
+
+if reply != "y" && reply != "Y"
+  puts "Aborting."
+  exit 0
+end
+
+puts "Updating app.yaml..."
+puts
+
+tmp_file = Tempfile.new("app_yaml_after")
+File.write(tmp_file, app_yaml_after)
+
+system("doctl apps update #{app_id} --spec #{tmp_file.path}")
+
