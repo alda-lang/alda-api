@@ -2,6 +2,7 @@
   (:require [cognician.dogstatsd        :as dogstatsd]
             [com.stuartsierra.component :as component]
             [io.alda.api.releases       :as releases]
+            [io.alda.api.telemetry      :as telemetry]
             [io.pedestal.http           :as http]
             [io.pedestal.http.route     :as route]
             [io.pedestal.interceptor    :as int]
@@ -63,12 +64,18 @@
     :as _request}]
   (success-response (releases/all-releases data)))
 
+(defn record-telemetry
+  [{:keys [body] :as _request}]
+  (telemetry/record-telemetry! (json/read-value body))
+  (response 201 "Telemetry recorded."))
+
 (def routes
   (route/expand-routes
-    #{["/health"                   :get `report-health]
-      ["/release/:release-version" :get `get-release]
-      ["/releases/latest"          :get `latest-releases]
-      ["/releases"                 :get `all-releases]}))
+    #{["/health"                   :get  `report-health]
+      ["/release/:release-version" :get  `get-release]
+      ["/releases/latest"          :get  `latest-releases]
+      ["/releases"                 :get  `all-releases]
+      ["/telemetry"                :post `record-telemetry]}))
 
 (def request-metrics-interceptor
   (int/interceptor
