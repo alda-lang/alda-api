@@ -107,6 +107,10 @@
                           str/trim)}))])))
        (into (sorted-map))))
 
+(def ^:const CACHE-UPDATE-INTERVAL-MS
+  ;; 5 minutes
+  (* 1000 60 5))
+
 (defrecord Cache []
   component/Lifecycle
   (start [{:keys [running?] :as component}]
@@ -115,7 +119,7 @@
       (let [data     (atom nil)
             running? (atom true)]
         (future
-          ;; Update the cache every 60 seconds.
+          ;; Update the cache periodically.
           (while @running?
             (try
               (log/debug :cache/status :updating)
@@ -130,7 +134,7 @@
                   1)
                 (log/error :exception t
                            :cache/status :failed)))
-            (Thread/sleep 60000)))
+            (Thread/sleep CACHE-UPDATE-INTERVAL-MS)))
         ;; Wait until the initial data is loaded before considering the
         ;; component to be operational.
         (while (nil? @data)
