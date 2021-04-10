@@ -113,11 +113,22 @@
       (assoc
         component
         ::server
-        (-> {::http/routes routes
-             ::http/type   :jetty
-             ::http/host   "0.0.0.0"
-             ::http/port   8080
-             ::http/join?  false}
+        (-> {::http/routes          routes
+             ;; This is a public API, so we will allow requests from any origin.
+             ;;
+             ;; NOTE: The proper thing to do here is to add the response header:
+             ;;   Access-Control-Allow-Origin: *
+             ;;
+             ;; But Pedestal's ::http/allowed-origins service map option
+             ;; doesn't support doing it that way. I think this dynamically
+             ;; sets the Access-Control-Allow-Origin response header to whatever
+             ;; the origin is, if this function returns true. I think that will
+             ;; work fine for our purposes.
+             ::http/allowed-origins (constantly true)
+             ::http/type            :jetty
+             ::http/host            "0.0.0.0"
+             ::http/port            8080
+             ::http/join?           false}
             (http/default-interceptors)
             (update
               ::http/interceptors
