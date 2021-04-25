@@ -158,11 +158,8 @@
   Alda v2 is _mostly_ compatible with your existing Alda v1 scores, but there
   are some minor differences.
 
-  For a run-down of things to be aware of when upgrading to Alda v2, see the
-  migration guide:
-
-    https://github.com/alda-lang/alda/blob/master/doc/alda-v2-migration-guide.md")
-
+  For a run-down of things to be aware of when upgrading to Alda v2, see:
+  https://github.com/alda-lang/alda/blob/master/doc/alda-v2-migration-guide.md")
 
 (defn releases-from-version
   "Given:
