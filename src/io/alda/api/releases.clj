@@ -157,7 +157,7 @@
 * Better error messages.
 * A network-enabled REPL designed for live collaboration.
 
-Alda 2 is _mostly_ compatible with your existing Alda 1 scores, but there
+Alda 2 is mostly compatible with your existing Alda 1 scores, but there
 are some minor differences.
 
 For a run-down of things to be aware of when upgrading to Alda 2, see:
