@@ -149,7 +149,7 @@
     (dissoc component ::data :cache/running?)))
 
 (def alda-v2-explanation
-  "Alda v2 is a from-scratch rewrite of Alda, featuring:
+  "Alda 2 is a from-scratch rewrite of Alda, featuring:
 
 * Significant performance improvements.
 * A simpler, more user-friendly architecture (no more running `alda up`!)
@@ -157,10 +157,10 @@
 * Better error messages.
 * A network-enabled REPL designed for live collaboration.
 
-Alda v2 is _mostly_ compatible with your existing Alda v1 scores, but there
+Alda 2 is _mostly_ compatible with your existing Alda 1 scores, but there
 are some minor differences.
 
-For a run-down of things to be aware of when upgrading to Alda v2, see:
+For a run-down of things to be aware of when upgrading to Alda 2, see:
 https://github.com/alda-lang/alda/blob/master/doc/alda-v2-migration-guide.md")
 
 (defn releases-from-version
