@@ -148,7 +148,7 @@
       (reset! running? false))
     (dissoc component ::data :cache/running?)))
 
-(def alda-v2-explanation
+(def alda-2-explanation
   "Alda 2 is a from-scratch rewrite of Alda, featuring:
 
 * Significant performance improvements.
@@ -161,7 +161,7 @@ Alda 2 is mostly compatible with your existing Alda 1 scores, but there
 are some minor differences.
 
 For a run-down of things to be aware of when upgrading to Alda 2, see:
-https://github.com/alda-lang/alda/blob/master/doc/alda-v2-migration-guide.md")
+https://github.com/alda-lang/alda/blob/master/doc/alda-2-migration-guide.md")
 
 (defn releases-from-version
   "Given:
@@ -193,7 +193,7 @@ https://github.com/alda-lang/alda/blob/master/doc/alda-v2-migration-guide.md")
              (into (sorted-map)))]
     [(or (vals candidates) [])
      (when (< from-major-version 2)
-       alda-v2-explanation)]))
+       alda-2-explanation)]))
 
 (defn latest-release
   "Returns the very latest release available.
