@@ -6,7 +6,7 @@ An API that, among other things, provides information about Alda releases.
 
 First, install the [official `clojure` CLI tools][clojure-cli].
 
-Then, run `clojure -m serve 8080` to serve the app locally on port 8080 (or
+Then, run `clojure -M:serve 8080` to serve the app locally on port 8080 (or
 replace 8080 with the port of your choice).
 
 ## Deployment
