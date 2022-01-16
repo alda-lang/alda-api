@@ -63,34 +63,35 @@
                     version-string
 
                     :assets
-                    (into
-                      {}
-                      (concat
-                        (for [os-and-arch
-                              ["darwin-amd64" "linux-386" "linux-amd64"]]
-                          [os-and-arch
-                           (for [file files
-                                 :when (or (str/includes? file os-and-arch)
-                                           (str/includes? file "non-windows"))]
-                             {:type "executable"
-                              :name (last (str/split file #"/"))
-                              :url  (format "%s/%s/%s"
-                                            storage-base-url
-                                            version-string
-                                            file)})])
-                        (for [os-and-arch
-                              ["windows-386" "windows-amd64"]]
-                          [os-and-arch
-                           (for [file files
-                                 :when (or (str/includes? file os-and-arch)
-                                           (str/includes? file "/windows/")
-                                           (str/starts-with? file "windows/"))]
-                             {:type "executable"
-                              :name (last (str/split file #"/"))
-                              :url  (format "%s/%s/%s"
-                                            storage-base-url
-                                            version-string
-                                            file)})])))}
+                    (let [asset (fn [file asset-type]
+                                  {:type asset-type
+                                   :name (last (str/split file #"/"))
+                                   :url  (format "%s/%s/%s"
+                                                 storage-base-url
+                                                 version-string
+                                                 file)})]
+                      (into
+                        {}
+                        (concat
+                          (for [os-and-arch
+                                ["darwin-amd64" "linux-386" "linux-amd64"]]
+                            [os-and-arch
+                             (for [file files
+                                   :when (or (str/includes? file os-and-arch)
+                                             (str/includes? file "non-windows"))]
+                               (asset file "executable"))])
+                          (for [os-and-arch
+                                ["windows-386" "windows-amd64"]]
+                            [os-and-arch
+                             (for [file files
+                                   :when (or (str/includes? file os-and-arch)
+                                             (str/includes? file "/windows/")
+                                             (str/starts-with? file "windows/"))]
+                               (asset file "executable"))])
+                          [["js-wasm"
+                            (for [file files
+                                  :when (str/includes? file "/js-wasm/")]
+                              (asset file "wasm"))]])))}
                    (when (some #{"date.txt"} files)
                      {:date
                       (-> (http/get (format "%s/%s/date.txt"
