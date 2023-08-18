@@ -22,21 +22,17 @@ fi
 datadog_config="/etc/datadog-agent/datadog.yaml"
 datadog_example_config="/etc/datadog-agent/datadog.yaml.example"
 
-if [[ -f "$datadog_config" ]]; then
-  echo "*** $datadog_config already exists. Not overwriting! ***"
-else
-  echo "*** Generating $datadog_config ***"
-
-  sed \
-    "s/api_key:.*/api_key: $DD_API_KEY/" \
-    "$datadog_example_config" \
-    > "$datadog_config"
-
-  sed -i \
-    's/# site:.*/site: datadoghq.com/' \
-    "$datadog_config"
+if ! [[ -f "$datadog_config" ]]; then
+  echo "*** Copying $datadog_example_config => $datadog_config ***"
+  cp "$datadog_example_config" "$datadog_config"
 fi
 
+echo "*** Replacing site and api_key in $datadog_config ***"
+
+sed -i \
+  -e 's/# site:.*/site: datadoghq.com/' \
+  -e "s/api_key:.*/api_key: $DD_API_KEY/" \
+  "$datadog_config"
 
 # service wrapper
 if which service >/dev/null; then
