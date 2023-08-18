@@ -35,19 +35,17 @@ sed -i \
   "$datadog_config"
 
 # service wrapper
-if which service >/dev/null; then
+if command -v service >/dev/null; then
   start_datadog_agent="service datadog-agent restart"
 # systemd
-elif which systemctl >/dev/null; then
+elif command -v systemctl >/dev/null; then
   start_datadog_agent="systemctl restart datadog-agent.service"
 # upstart
 else
   start_datadog_agent="start datadog-agent"
 fi
 
-set +e
-$start_datadog_agent
-if [[ $? -ne 0 ]]; then
+if ! $start_datadog_agent; then
   cat <<EOF
 ---
 2020-12-24 Dave: I've seen the message "Starting Datadog Agent: datadog-agent
@@ -56,7 +54,6 @@ think it's OK to assume it's working and continue.
 ---
 EOF
 fi
-set -e
 
 # Serve the app.
 cd "$(dirname "$0")/../"
