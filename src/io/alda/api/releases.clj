@@ -74,7 +74,8 @@
                         {}
                         (concat
                           (for [os-and-arch
-                                ["darwin-amd64" "linux-386" "linux-amd64"]]
+                                ["darwin-amd64" "darwin-arm64" "linux-386"
+                                 "linux-amd64"]]
                             [os-and-arch
                              (for [file files
                                    :when (or (str/includes? file os-and-arch)

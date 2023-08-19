@@ -39,8 +39,8 @@
                                 "https://example.com/%s/alda-player"
                                 version)}]))
                   {}
-                  ["darwin-amd64" "linux-386" "linux-amd64" "windows-386"
-                   "windows-amd64"])}))
+                  ["darwin-amd64" "darwin-arm64" "linux-386" "linux-amd64"
+                   "windows-386" "windows-amd64"])}))
 
 (def mock-releases-data
   (into
