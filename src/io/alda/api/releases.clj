@@ -189,7 +189,7 @@ https://github.com/alda-lang/alda/blob/master/doc/alda-2-migration-guide.md")
         candidates
         (->> newer-versions
              (partition-by ffirst)
-             (map (fn [[version & more :as version-series]]
+             (map (fn [[version & _more :as version-series]]
                     [(ffirst version)
                      (val (last version-series))]))
              (into (sorted-map)))]
