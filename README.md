@@ -9,6 +9,8 @@ First, install the [official `clojure` CLI tools][clojure-cli].
 Then, run `clojure -M:serve 8080` to serve the app locally on port 8080 (or
 replace 8080 with the port of your choice).
 
+To run tests: `clojure -M:test`.
+
 ## Deployment
 
 The Alda API is set up as a DigitalOcean App. The [app specification YAML
